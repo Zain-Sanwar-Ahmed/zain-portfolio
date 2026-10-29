@@ -2,69 +2,68 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-const menuOpen = ref(false)
-const portfolio = ref(null)
-const apiError = ref(false)
-const loading = ref(true)
+const portfolio = ref({
+  name: 'Zain Sanwar Ahmed',
+  title: 'Aspiring Full-Stack Developer',
+  location: 'Dhaka, Bangladesh',
+  skills: [
+    'HTML & CSS',
+    'JavaScript',
+    'Vue.js',
+    'PHP',
+    'Laravel',
+    'MySQL',
+    'Git & GitHub',
+    'REST APIs',
+  ],
+  message: 'Welcome to my portfolio!',
+})
 
-const skills = [
-  'HTML & CSS',
-  'JavaScript',
-  'Vue.js',
-  'PHP',
-  'Laravel',
-  'MySQL',
-  'Git & GitHub',
-  'REST APIs',
-]
+const loading = ref(true)
+const apiError = ref(false)
 
 const projects = [
   {
     number: '01',
     title: 'Personal Portfolio Website',
     description:
-      'A responsive personal portfolio built with Vue 3 and Laravel to showcase my skills, projects, and developer journey.',
-    technologies: ['Vue 3', 'Laravel', 'REST API'],
-    status: 'In development',
+      'A responsive personal portfolio built with Vue 3 and Laravel to showcase my skills, projects, and development journey.',
+    technologies: ['Vue 3', 'Laravel', 'REST API', 'CSS'],
+    status: 'In progress',
+    github: 'https://github.com/Zain-Sanwar-Ahmed/zain-portfolio',
   },
   {
     number: '02',
-    title: 'Full-Stack Web Application',
+    title: 'Laravel Web Application',
     description:
-      'A planned full-stack application to practise frontend development, backend APIs, database operations, and authentication.',
-    technologies: ['Vue 3', 'Laravel', 'MySQL'],
-    status: 'Planned project',
+      'A planned web application to practise backend development, routing, database integration, and API development with Laravel.',
+    technologies: ['PHP', 'Laravel', 'MySQL'],
+    status: 'Planned',
+    github: 'https://github.com/Zain-Sanwar-Ahmed',
   },
   {
     number: '03',
-    title: 'Interactive Web Application',
+    title: 'Vue.js Frontend Project',
     description:
-      'A planned interactive application focused on JavaScript fundamentals, responsive UI, and API integration.',
-    technologies: ['JavaScript', 'Vue 3', 'REST API'],
-    status: 'Planned project',
-  },
-]
-
-const socialLinks = [
-  {
-    name: 'GitHub',
-    url: 'https://github.com/Zain-Sanwar-Ahmed',
-  },
-  {
-    name: 'LinkedIn',
-    url: 'https://www.linkedin.com/in/zain-sanwar-ahmed-6562291ab/',
+      'A planned frontend project focused on reusable Vue components, responsive layouts, and connecting applications to APIs.',
+    technologies: ['Vue 3', 'JavaScript', 'REST APIs'],
+    status: 'Planned',
+    github: 'https://github.com/Zain-Sanwar-Ahmed',
   },
 ]
 
 onMounted(async () => {
   try {
-    const response = await fetch('http://127.0.0.1:8000/api/portfolio')
+    const response = await fetch(
+      'https://zain-portfolio-api.onrender.com/api/portfolio'
+    )
 
     if (!response.ok) {
-      throw new Error('Could not load portfolio information.')
+      throw new Error('Unable to load portfolio data')
     }
 
-    portfolio.value = await response.json()
+    const data = await response.json()
+    portfolio.value = { ...portfolio.value, ...data }
   } catch (error) {
     console.error('Portfolio API error:', error)
     apiError.value = true
@@ -72,235 +71,231 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
+const currentYear = new Date().getFullYear()
 </script>
 
 <template>
-  <div class="site-wrapper" id="home">
+  <div class="site-wrapper">
     <header class="navbar">
-      <a class="logo" href="#home" @click="menuOpen = false">
-        zain<span>.dev</span>
-      </a>
+      <a class="logo" href="#home">Z<span>.</span></a>
 
-      <button
-        class="menu-toggle"
-        type="button"
-        :aria-expanded="menuOpen"
-        aria-label="Toggle navigation menu"
-        @click="menuOpen = !menuOpen"
-      >
-        {{ menuOpen ? '✕' : '☰' }}
-      </button>
-
-      <nav :class="{ 'nav-open': menuOpen }">
-        <a href="#about" @click="menuOpen = false">About</a>
-        <a href="#skills" @click="menuOpen = false">Skills</a>
-        <a href="#projects" @click="menuOpen = false">Projects</a>
-        <a
-          href="#contact"
-          class="nav-contact"
-          @click="menuOpen = false"
-        >
-          Contact me ↗
-        </a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
       </nav>
+
+      <a
+        class="nav-button"
+        href="https://github.com/Zain-Sanwar-Ahmed"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GitHub <span aria-hidden="true">↗</span>
+      </a>
     </header>
 
     <main>
-      <section class="hero section-container">
+      <section id="home" class="hero section-container">
         <div class="hero-content">
           <div class="availability">
             <span class="status-dot"></span>
-            <span>OPEN TO OPPORTUNITIES</span>
+            Aspiring Developer · {{ portfolio.location }}
           </div>
 
-          <p class="eyebrow">HELLO, I'M</p>
+          <p class="eyebrow">HELLO, WORLD! I'M</p>
 
           <h1>
-            Zain Sanwar
-            <span>Ahmed.</span>
+            {{ portfolio.name.split(' ').slice(0, 2).join(' ') }}
+            <span class="highlight">
+              {{ portfolio.name.split(' ').slice(2).join(' ') }}
+            </span>
           </h1>
 
-          <h2>
-            {{ portfolio?.title || 'Aspiring Full-Stack Developer' }}
-          </h2>
+          <h2>{{ portfolio.title }}</h2>
 
           <p class="hero-description">
-            I'm building my skills in modern web development and creating
-            practical projects with Vue.js and Laravel. I'm eager to learn,
-            solve problems, and grow as a software developer.
-          </p>
-
-          <p class="location">
-            <span>⌖</span>
-            {{ portfolio?.location || 'Dhaka, Bangladesh' }}
+            I'm learning to build useful, responsive, and user-friendly web
+            applications. I enjoy exploring frontend and backend technologies
+            and turning ideas into working projects.
           </p>
 
           <div class="hero-actions">
-            <a href="#projects" class="button button-primary">
-              Explore my work <span>↘</span>
+            <a class="button button-primary" href="#projects">
+              Explore my work <span aria-hidden="true">↓</span>
             </a>
 
-            <a href="#contact" class="button button-secondary">
+            <a class="button button-secondary" href="#contact">
               Get in touch
             </a>
           </div>
 
-          <div class="social-shortcuts">
-            <a
-              v-for="social in socialLinks"
-              :key="social.name"
-              :href="social.url"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {{ social.name }} ↗
-            </a>
-          </div>
+          <p v-if="loading" class="api-message">
+            Connecting to portfolio API…
+          </p>
+
+          <p v-else-if="apiError" class="api-message">
+            Showing portfolio information saved in the frontend.
+          </p>
+
+          <p v-else class="api-message success-message">
+            <span class="status-dot"></span>
+            Portfolio API connected
+          </p>
         </div>
 
-        <div class="hero-visual">
-          <div class="code-card">
-            <div class="code-card-header">
+        <div class="hero-card">
+          <div class="code-window">
+            <div class="window-header">
               <div class="window-dots">
-                <span></span>
-                <span></span>
-                <span></span>
+                <span></span><span></span><span></span>
               </div>
-              <span class="file-label">developer.js</span>
-              <span class="file-menu">•••</span>
+              <span class="window-title">developer.js</span>
             </div>
 
             <div class="code-content">
-              <p><span class="line-number">01</span> <span class="code-purple">const</span> developer = {</p>
-              <p><span class="line-number">02</span> &nbsp; name: <span class="code-green">'Zain Ahmed'</span>,</p>
-              <p><span class="line-number">03</span> &nbsp; role: <span class="code-green">'Full-Stack Developer'</span>,</p>
-              <p><span class="line-number">04</span> &nbsp; location: <span class="code-green">'Dhaka, BD'</span>,</p>
-              <p><span class="line-number">05</span> &nbsp; skills: [</p>
-              <p><span class="line-number">06</span> &nbsp; &nbsp; <span class="code-green">'Vue.js'</span>,</p>
-              <p><span class="line-number">07</span> &nbsp; &nbsp; <span class="code-green">'Laravel'</span>,</p>
-              <p><span class="line-number">08</span> &nbsp; &nbsp; <span class="code-green">'JavaScript'</span></p>
-              <p><span class="line-number">09</span> &nbsp; ],</p>
-              <p><span class="line-number">10</span> &nbsp; learning: <span class="code-blue">true</span>,</p>
-              <p><span class="line-number">11</span> &nbsp; passion: <span class="code-green">'Building things'</span></p>
-              <p><span class="line-number">12</span> };</p>
-              <p class="code-comment"><span class="line-number">13</span> // Always learning, always building.</p>
+              <p><span class="code-purple">const</span> developer = {</p>
+              <p class="indent">
+                name:
+                <span class="code-green">'{{ portfolio.name }}'</span>,
+              </p>
+              <p class="indent">
+                role:
+                <span class="code-green">'Full-Stack Developer'</span>,
+              </p>
+              <p class="indent">
+                location:
+                <span class="code-green">'Dhaka, Bangladesh'</span>,
+              </p>
+              <p class="indent">
+                learning: [
+              </p>
+              <p class="indent code-green">
+                'Vue.js', 'Laravel'
+              </p>
+              <p class="indent">],</p>
+              <p class="indent">
+                openToWork: <span class="code-orange">true</span>,
+              </p>
+              <p>}</p>
+              <p class="code-comment">
+                // Always learning, always building.
+              </p>
+              <p class="code-cursor">▋</p>
             </div>
+          </div>
 
-            <div class="code-card-footer">
-              <span><span class="terminal-dot"></span> Ready to build</span>
-              <span>UTF-8</span>
+          <div class="floating-badge badge-top">
+            <span class="badge-icon">⌘</span>
+            <div>
+              <strong>Frontend</strong>
+              <small>Vue.js · JavaScript</small>
             </div>
           </div>
 
-          <div class="floating-badge badge-vue">
-            <span class="badge-symbol">V</span>
-            <span>Vue.js</span>
+          <div class="floating-badge badge-bottom">
+            <span class="badge-icon badge-icon-green">⌁</span>
+            <div>
+              <strong>Backend</strong>
+              <small>PHP · Laravel</small>
+            </div>
           </div>
-
-          <div class="floating-badge badge-laravel">
-            <span class="badge-symbol">L</span>
-            <span>Laravel</span>
-          </div>
-
-          <div class="visual-glow"></div>
         </div>
-
-        <a href="#about" class="scroll-indicator">
-          <span class="scroll-line"></span>
-          SCROLL TO EXPLORE
-        </a>
       </section>
 
-      <section id="about" class="section-container content-section">
+      <section id="about" class="section-container section-block">
         <div class="section-heading">
-          <p class="eyebrow">01 / ABOUT ME</p>
-          <h2>A developer in the making.</h2>
+          <p class="eyebrow">A LITTLE ABOUT ME</p>
+          <h2>Learning today. <span class="highlight">Building for tomorrow.</span></h2>
         </div>
 
         <div class="about-grid">
           <div class="about-copy">
             <p>
-              I'm an aspiring software developer based in Dhaka, Bangladesh,
-              working toward becoming a capable full-stack web developer.
+              I'm an aspiring full-stack developer based in Dhaka, Bangladesh,
+              working toward building a career in software development.
             </p>
-
             <p>
-              I enjoy learning how websites work, connecting frontend
-              interfaces to backend APIs, and turning ideas into practical
-              applications. I'm focused on strengthening my fundamentals
-              through hands-on practice and projects.
+              My learning journey includes frontend technologies such as HTML,
+              CSS, JavaScript, and Vue.js, alongside backend development with
+              PHP and Laravel.
             </p>
-
             <p>
-              My goal is to join a development team where I can contribute,
-              learn from experienced developers, and continue improving.
+              I'm focused on strengthening my fundamentals, building practical
+              projects, learning to work with APIs, and improving my
+              problem-solving skills.
             </p>
           </div>
 
-          <div class="about-details">
-            <div class="detail-card">
-              <span class="detail-icon">⌘</span>
+          <div class="about-facts">
+            <div class="fact-card">
+              <span class="fact-number">01</span>
               <div>
-                <h3>Frontend</h3>
-                <p>Building responsive interfaces with Vue.js.</p>
+                <h3>Keep learning</h3>
+                <p>Continuously developing my technical skills.</p>
               </div>
             </div>
 
-            <div class="detail-card">
-              <span class="detail-icon">⌘</span>
+            <div class="fact-card">
+              <span class="fact-number">02</span>
               <div>
-                <h3>Backend</h3>
-                <p>Learning server-side development with Laravel and PHP.</p>
+                <h3>Build projects</h3>
+                <p>Applying concepts through hands-on practice.</p>
               </div>
             </div>
 
-            <div class="detail-card">
-              <span class="detail-icon">↗</span>
+            <div class="fact-card">
+              <span class="fact-number">03</span>
               <div>
-                <h3>Always learning</h3>
-                <p>Improving through practice and real projects.</p>
+                <h3>Grow as a developer</h3>
+                <p>Working toward professional software development.</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="skills" class="section-container content-section">
+      <section id="skills" class="section-container section-block">
         <div class="section-heading">
-          <p class="eyebrow">02 / TECHNICAL SKILLS</p>
-          <h2>Tools I'm working with.</h2>
+          <p class="eyebrow">MY TOOLKIT</p>
+          <h2>Skills & <span class="highlight">Technologies</span></h2>
           <p class="section-description">
-            Technologies I'm learning and practising as I grow as a developer.
+            Technologies I'm learning and using in my development journey.
           </p>
         </div>
 
         <div class="skills-grid">
           <div
-            v-for="(skill, index) in skills"
+            v-for="(skill, index) in portfolio.skills"
             :key="skill"
             class="skill-card"
           >
-            <span class="skill-number">
+            <span class="skill-index">
               {{ String(index + 1).padStart(2, '0') }}
             </span>
-            <span>{{ skill }}</span>
-            <span class="skill-arrow">↗</span>
+            <span class="skill-name">{{ skill }}</span>
+            <span class="skill-arrow" aria-hidden="true">↗</span>
           </div>
         </div>
-
-        <p class="skills-note">
-          Skill levels develop with practice. This list reflects my learning
-          focus, not a claim of expert proficiency in every technology.
-        </p>
       </section>
 
-      <section id="projects" class="section-container content-section">
-        <div class="section-heading projects-heading">
+      <section id="projects" class="section-container section-block">
+        <div class="section-heading project-heading">
           <div>
-            <p class="eyebrow">03 / SELECTED PROJECTS</p>
-            <h2>Things I'm building.</h2>
+            <p class="eyebrow">SELECTED WORK</p>
+            <h2>Projects & <span class="highlight">Practice</span></h2>
           </div>
-          <span class="project-count">03 CONCEPTS</span>
+
+          <a
+            class="text-link"
+            href="https://github.com/Zain-Sanwar-Ahmed"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View GitHub profile <span aria-hidden="true">↗</span>
+          </a>
         </div>
 
         <div class="projects-grid">
@@ -309,108 +304,123 @@ onMounted(async () => {
             :key="project.number"
             class="project-card"
           >
-            <div class="project-top">
+            <div class="project-card-top">
               <span class="project-number">{{ project.number }}</span>
               <span class="project-status">{{ project.status }}</span>
             </div>
 
-            <div class="project-art">
-              <span class="art-bracket">&lt;</span>
-              <span class="art-code">/</span>
-              <span class="art-bracket">&gt;</span>
+            <div class="project-illustration">
+              <span class="illustration-symbol">
+                {{ project.number === '01' ? '</>' : project.number === '02' ? '{ }' : '⌘' }}
+              </span>
+              <span class="illustration-line"></span>
+              <span class="illustration-line short-line"></span>
             </div>
 
             <h3>{{ project.title }}</h3>
-            <p>{{ project.description }}</p>
+            <p class="project-description">{{ project.description }}</p>
 
             <div class="technology-list">
               <span
                 v-for="technology in project.technologies"
                 :key="technology"
+                class="technology-tag"
               >
                 {{ technology }}
               </span>
             </div>
+
+            <a
+              class="project-link"
+              :href="project.github"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View on GitHub <span aria-hidden="true">↗</span>
+            </a>
           </article>
         </div>
 
         <p class="projects-note">
-          These entries include planned work. I'll replace them with completed
-          projects and their source-code links as I build and publish them.
+          Note: Projects marked Planned or In progress are not presented as
+          completed work.
         </p>
       </section>
 
-      <section id="contact" class="section-container contact-section">
-        <p class="eyebrow">04 / GET IN TOUCH</p>
-        <h2>Have an opportunity in mind?</h2>
+      <section id="contact" class="section-container section-block">
+        <div class="contact-panel">
+          <div class="contact-content">
+            <p class="eyebrow">LET'S CONNECT</p>
+            <h2>Have an opportunity or <span class="highlight">a project in mind?</span></h2>
+            <p>
+              I'm interested in connecting with developers, learning from
+              experienced professionals, and exploring suitable entry-level
+              opportunities in software development.
+            </p>
 
-        <p class="contact-description">
-          I'm interested in connecting with developers, collaborating on
-          projects, and exploring suitable junior developer opportunities.
-        </p>
+            <a
+              class="button button-primary"
+              href="mailto:zainsanwarahmed@gmail.com"
+            >
+              Email me <span aria-hidden="true">↗</span>
+            </a>
+          </div>
 
-        <a
-          class="button button-primary contact-button"
-          href="mailto:zainsanwarahmed@gmail.com"
-        >
-          Send me an email <span>↗</span>
-        </a>
+          <div class="contact-links">
+            <a
+              href="https://github.com/Zain-Sanwar-Ahmed"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-link"
+            >
+              <span class="social-symbol">GH</span>
+              <span>
+                <strong>GitHub</strong>
+                <small>Explore my repositories</small>
+              </span>
+              <span class="social-arrow">↗</span>
+            </a>
 
-        <a
-          class="contact-email"
-          href="mailto:zainsanwarahmed@gmail.com"
-        >
-          zainsanwarahmed@gmail.com
-        </a>
+            <a
+              href="https://www.linkedin.com/in/zain-sanwar-ahmed-6562291ab/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-link"
+            >
+              <span class="social-symbol">in</span>
+              <span>
+                <strong>LinkedIn</strong>
+                <small>Connect professionally</small>
+              </span>
+              <span class="social-arrow">↗</span>
+            </a>
 
-        <div class="contact-socials">
-          <a
-            v-for="social in socialLinks"
-            :key="social.name"
-            :href="social.url"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Visit my {{ social.name }} profile ↗
-          </a>
+            <a
+              href="mailto:zainsanwarahmed@gmail.com"
+              class="social-link"
+            >
+              <span class="social-symbol">@</span>
+              <span>
+                <strong>Email</strong>
+                <small>zainsanwarahmed@gmail.com</small>
+              </span>
+              <span class="social-arrow">↗</span>
+            </a>
+          </div>
         </div>
-      </section>
-
-      <section v-if="loading || apiError || portfolio" class="api-status">
-        <p v-if="loading" class="api-message">
-          Connecting to the Laravel backend...
-        </p>
-
-        <p v-else-if="apiError" class="api-message api-error">
-          The Laravel API is currently unavailable. The portfolio is still
-          displayed using its default information.
-        </p>
-
-        <p v-else class="api-message api-success">
-          <span class="status-dot"></span>
-          Connected to the Laravel API successfully.
-        </p>
       </section>
     </main>
 
     <footer class="footer">
-      <a class="logo" href="#home">zain<span>.dev</span></a>
+      <a class="logo footer-logo" href="#home">Z<span>.</span></a>
 
-      <p>Designed &amp; built with Vue.js and Laravel.</p>
+      <p>
+        © {{ currentYear }} {{ portfolio.name }}. Built with Vue.js.
+      </p>
 
-      <div class="footer-links">
-        <a
-          v-for="social in socialLinks"
-          :key="social.name"
-          :href="social.url"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {{ social.name }} ↗
-        </a>
-
-        <a href="#home" class="back-to-top">Back to top ↑</a>
-      </div>
+      <a href="#home" class="back-to-top">
+        Back to top ↑
+      </a>
     </footer>
   </div>
 </template>
@@ -420,45 +430,34 @@ onMounted(async () => {
 
 :root {
   font-family: 'Inter', sans-serif;
-  color: #f3f4fb;
-  background: #080b14;
+  color: #e8edf8;
+  background: #080d19;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  --background: #080b14;
-  --surface: #0e1220;
-  --surface-light: #12182a;
-  --border: #222940;
-  --text: #f3f4fb;
-  --muted: #929bb3;
-  --blue: #7791ff;
-  --violet: #a78bfa;
-  --green: #72e6b0;
+  font-optical-sizing: auto;
+  scroll-behavior: smooth;
+  --background: #080d19;
+  --surface: #0d1424;
+  --surface-light: #111b2e;
+  --border: #202d43;
+  --text: #e8edf8;
+  --muted: #9ba8bd;
+  --accent: #7c9cff;
+  --green: #7ee7bd;
 }
 
 * {
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 90px;
-}
-
 body {
   margin: 0;
   min-width: 320px;
   background:
-    radial-gradient(ellipse at 75% 10%, #14152a 0%, transparent 35%),
+    radial-gradient(ellipse at 50% -15%, #172748 0%, transparent 45%),
     var(--background);
-}
-
-body,
-button,
-a {
-  font-family: 'Inter', sans-serif;
 }
 
 a {
@@ -466,13 +465,14 @@ a {
   text-decoration: none;
 }
 
-button {
-  font: inherit;
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
 }
 
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid var(--blue);
+  outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
 
@@ -480,162 +480,141 @@ a:focus-visible {
   overflow: hidden;
 }
 
-.section-container {
+.section-container,
+.navbar,
+.footer {
   width: min(1120px, calc(100% - 48px));
   margin-inline: auto;
 }
 
 .navbar {
-  min-height: 84px;
-  width: min(1120px, calc(100% - 48px));
-  margin-inline: auto;
+  min-height: 82px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(146, 155, 179, 0.12);
+  border-bottom: 1px solid rgba(155, 168, 189, 0.12);
 }
 
 .logo {
-  font-size: 1.35rem;
+  font-size: 30px;
   font-weight: 800;
-  letter-spacing: -1px;
+  letter-spacing: -2px;
 }
 
 .logo span {
-  color: var(--blue);
+  color: var(--accent);
 }
 
-.navbar nav {
+.nav-links {
   display: flex;
-  align-items: center;
-  gap: 34px;
+  gap: 32px;
 }
 
-.navbar nav a {
+.nav-links a,
+.nav-button,
+.text-link {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.nav-links a {
   color: var(--muted);
-  font-size: 0.83rem;
-  transition: color 0.2s ease;
+  transition: color 0.2s;
 }
 
-.navbar nav a:hover {
-  color: var(--text);
+.nav-links a:hover,
+.text-link:hover {
+  color: var(--accent);
 }
 
-.navbar nav .nav-contact {
-  padding: 12px 17px;
-  color: var(--text);
-  border: 1px solid #343c58;
-  border-radius: 8px;
-}
-
-.navbar nav .nav-contact:hover {
-  border-color: var(--blue);
-}
-
-.menu-toggle {
-  display: none;
+.nav-button {
+  padding: 11px 15px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--surface);
-  color: var(--text);
-  padding: 8px 12px;
-  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.nav-button:hover {
+  background: var(--surface-light);
+  border-color: var(--accent);
+}
+
+.nav-button span,
+.text-link span {
+  margin-left: 5px;
 }
 
 .hero {
-  min-height: 650px;
-  position: relative;
+  min-height: 620px;
+  padding-block: 105px 100px;
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
+  grid-template-columns: 1.1fr 0.9fr;
   align-items: center;
-  gap: 50px;
-  padding-top: 55px;
-  padding-bottom: 105px;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 2;
+  gap: 60px;
 }
 
 .availability {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  padding: 9px 12px;
-  margin-bottom: 32px;
-  color: #aab4ce;
-  border: 1px solid #26334a;
-  border-radius: 30px;
-  background: rgba(15, 25, 40, 0.7);
-  font-family: 'DM Mono', monospace;
-  font-size: 0.66rem;
-  letter-spacing: 0.6px;
+  border: 1px solid var(--border);
+  background: rgba(17, 27, 46, 0.8);
+  padding: 9px 13px;
+  border-radius: 100px;
+  color: #c0cbdf;
+  font-size: 11px;
+  margin-bottom: 35px;
 }
 
-.status-dot,
-.terminal-dot {
+.status-dot {
   display: inline-block;
   width: 7px;
   height: 7px;
   flex-shrink: 0;
   border-radius: 50%;
   background: var(--green);
-  box-shadow: 0 0 12px rgba(114, 230, 176, 0.4);
+  box-shadow: 0 0 12px rgba(126, 231, 189, 0.5);
 }
 
 .eyebrow {
-  color: var(--blue);
+  color: var(--accent);
   font-family: 'DM Mono', monospace;
-  font-size: 0.74rem;
+  font-size: 11px;
   letter-spacing: 2px;
+  margin: 0 0 17px;
 }
 
 .hero h1 {
-  margin: 13px 0 18px;
-  font-size: clamp(3rem, 5.4vw, 5.1rem);
-  line-height: 1.05;
-  letter-spacing: -4px;
+  font-size: clamp(42px, 5vw, 66px);
+  line-height: 1.12;
+  letter-spacing: -3px;
+  margin: 0;
   font-weight: 800;
 }
 
-.hero h1 span {
-  display: block;
-  color: var(--blue);
+.highlight {
+  color: var(--accent);
 }
 
 .hero h2 {
-  margin: 0 0 18px;
-  color: #d4d9e8;
-  font-size: 1.2rem;
+  font-size: clamp(19px, 2vw, 24px);
   font-weight: 500;
+  color: #c1ccdf;
+  margin: 20px 0 0;
 }
 
 .hero-description {
-  max-width: 475px;
+  max-width: 510px;
   color: var(--muted);
-  font-size: 0.96rem;
+  font-size: 14px;
   line-height: 1.9;
-}
-
-.location {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #a6aec4;
-  font-size: 0.84rem;
-}
-
-.location span {
-  color: var(--blue);
-  font-size: 1.2rem;
+  margin: 23px 0 28px;
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 13px;
-  margin-top: 28px;
+  gap: 12px;
 }
 
 .button {
@@ -643,15 +622,11 @@ a:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 14px 19px;
-  border: 1px solid transparent;
   border-radius: 8px;
-  font-size: 0.84rem;
-  font-weight: 600;
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    border-color 0.2s ease;
+  padding: 14px 19px;
+  font-size: 12px;
+  font-weight: 700;
+  transition: transform 0.2s, background 0.2s, border-color 0.2s;
 }
 
 .button:hover {
@@ -659,70 +634,58 @@ a:focus-visible {
 }
 
 .button-primary {
-  background: var(--blue);
-  color: #090d1a;
+  color: #081020;
+  background: var(--accent);
 }
 
 .button-primary:hover {
-  background: #94a7ff;
+  background: #9ab2ff;
 }
 
 .button-secondary {
-  border-color: #343c58;
+  border: 1px solid var(--border);
   color: var(--text);
-  background: rgba(14, 18, 32, 0.5);
+  background: transparent;
 }
 
 .button-secondary:hover {
-  border-color: var(--blue);
+  background: var(--surface-light);
 }
 
-.social-shortcuts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 22px;
-  margin-top: 27px;
+.api-message {
+  color: #8290a8;
+  font-size: 11px;
+  margin-top: 20px;
 }
 
-.social-shortcuts a {
-  color: #a8b7ff;
-  font-size: 0.8rem;
-}
-
-.social-shortcuts a:hover {
-  color: white;
-}
-
-.hero-visual {
-  position: relative;
+.success-message {
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-width: 0;
-  padding: 25px 0;
+  gap: 8px;
+  color: var(--green);
 }
 
-.code-card {
+.hero-card {
+  min-width: 0;
   position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 475px;
-  overflow: hidden;
-  border: 1px solid #2b3451;
+  padding: 25px;
+}
+
+.code-window {
+  border: 1px solid #28364f;
+  background: #0c1322;
   border-radius: 13px;
-  background: rgba(14, 18, 32, 0.96);
-  box-shadow: 0 25px 90px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
   transform: rotate(1deg);
 }
 
-.code-card-header,
-.code-card-footer {
-  min-height: 47px;
+.window-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 17px;
-  border-bottom: 1px solid #242b40;
+  gap: 18px;
+  padding: 16px 18px;
+  border-bottom: 1px solid #202c40;
 }
 
 .window-dots {
@@ -734,224 +697,195 @@ a:focus-visible {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #4b536a;
+  background: #52627a;
 }
 
 .window-dots span:first-child {
-  background: #ff7d87;
+  background: #ff7c87;
 }
 
 .window-dots span:nth-child(2) {
-  background: #f6ca78;
+  background: #f6c76d;
 }
 
 .window-dots span:nth-child(3) {
-  background: #7edbb1;
+  background: #72d8a8;
 }
 
-.file-label,
-.file-menu,
-.code-card-footer {
-  color: #75809c;
+.window-title {
+  color: #8796ad;
   font-family: 'DM Mono', monospace;
-  font-size: 0.68rem;
+  font-size: 11px;
 }
 
 .code-content {
-  padding: 21px 15px 23px;
-  overflow-x: auto;
+  padding: 27px 23px 31px;
+  color: #cbd5e5;
   font-family: 'DM Mono', monospace;
-  font-size: clamp(0.65rem, 1.1vw, 0.79rem);
-  line-height: 2.15;
+  font-size: clamp(10px, 1.15vw, 13px);
+  line-height: 2.2;
+  white-space: nowrap;
 }
 
 .code-content p {
-  width: max-content;
-  min-width: 100%;
   margin: 0;
-  white-space: pre;
 }
 
-.line-number {
-  display: inline-block;
-  width: 29px;
-  color: #4f5873;
-  user-select: none;
+.indent {
+  padding-left: 22px;
 }
 
 .code-purple {
-  color: #c6a4ff;
+  color: #c8a5ff;
 }
 
 .code-green {
-  color: #85dfb5;
+  color: #82e6bd;
 }
 
-.code-blue {
-  color: #82b7ff;
+.code-orange {
+  color: #ffc17c;
 }
 
 .code-comment {
-  color: #65708c;
+  color: #71819a;
+  margin-top: 13px !important;
 }
 
-.code-card-footer {
-  border-top: 1px solid #242b40;
-  border-bottom: 0;
+.code-cursor {
+  color: var(--accent);
+  animation: blink 1s steps(2, start) infinite;
 }
 
-.code-card-footer span:first-child {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.terminal-dot {
-  width: 6px;
-  height: 6px;
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
 }
 
 .floating-badge {
   position: absolute;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 12px 15px;
-  border: 1px solid #333c59;
-  border-radius: 10px;
-  background: #141a2b;
-  color: #e7eafd;
-  font-size: 0.78rem;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-}
-
-.badge-vue {
-  top: 9%;
-  right: -3%;
-}
-
-.badge-laravel {
-  bottom: 8%;
-  left: -5%;
-}
-
-.badge-symbol {
-  display: grid;
-  place-items: center;
-  width: 23px;
-  height: 23px;
-  border-radius: 6px;
-  background: #243455;
-  color: #a6b5ff;
-  font-family: 'DM Mono', monospace;
-  font-weight: 700;
-}
-
-.visual-glow {
-  position: absolute;
-  width: 80%;
-  height: 80%;
-  border-radius: 50%;
-  background: rgba(92, 92, 255, 0.13);
-  filter: blur(85px);
-}
-
-.scroll-indicator {
-  position: absolute;
-  bottom: 32px;
-  left: 0;
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #7b849e;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.64rem;
-  letter-spacing: 1px;
+  padding: 14px 17px;
+  background: #131e31;
+  border: 1px solid #2b3b56;
+  border-radius: 10px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
 }
 
-.scroll-line {
-  width: 33px;
-  height: 1px;
-  background: var(--blue);
+.badge-top {
+  top: 0;
+  right: -8px;
 }
 
-.content-section {
-  padding-top: 100px;
-  padding-bottom: 45px;
-  border-top: 1px solid rgba(146, 155, 179, 0.12);
+.badge-bottom {
+  bottom: 0;
+  left: -12px;
+}
+
+.badge-icon {
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 8px;
+  background: #27385c;
+  color: #b8c8ff;
+  font-size: 20px;
+}
+
+.badge-icon-green {
+  color: var(--green);
+  background: #18372f;
+}
+
+.floating-badge strong,
+.floating-badge small {
+  display: block;
+}
+
+.floating-badge strong {
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+
+.floating-badge small {
+  font-size: 9px;
+  color: var(--muted);
+}
+
+.section-block {
+  padding-block: 92px;
+  border-top: 1px solid rgba(155, 168, 189, 0.12);
 }
 
 .section-heading {
-  max-width: 650px;
   margin-bottom: 38px;
 }
 
-.section-heading .eyebrow {
-  margin-bottom: 15px;
-}
-
 .section-heading h2,
-.contact-section h2 {
-  margin: 0;
-  font-size: clamp(2rem, 4vw, 3rem);
+.contact-content h2 {
+  font-size: clamp(27px, 3.5vw, 39px);
+  line-height: 1.3;
   letter-spacing: -1.5px;
-  line-height: 1.2;
+  margin: 0;
 }
 
 .section-description {
-  margin-top: 15px;
   color: var(--muted);
+  font-size: 13px;
   line-height: 1.8;
+  margin-top: 15px;
 }
 
 .about-grid {
   display: grid;
-  grid-template-columns: 1fr 0.8fr;
-  gap: 70px;
+  grid-template-columns: 1fr 1fr;
+  gap: 65px;
+  align-items: start;
 }
 
 .about-copy p {
-  color: #a4acc1;
-  font-size: 0.94rem;
-  line-height: 1.95;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 2;
+  margin: 0 0 18px;
 }
 
-.about-details {
+.about-facts {
   display: grid;
-  gap: 13px;
+  gap: 12px;
 }
 
-.detail-card {
+.fact-card {
   display: flex;
-  gap: 15px;
+  align-items: flex-start;
+  gap: 18px;
   padding: 19px;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: rgba(14, 18, 32, 0.65);
 }
 
-.detail-icon {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
-  border-radius: 8px;
-  background: #1b2340;
-  color: var(--blue);
+.fact-number {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  padding-top: 2px;
 }
 
-.detail-card h3 {
+.fact-card h3 {
+  font-size: 13px;
   margin: 0 0 7px;
-  font-size: 0.9rem;
 }
 
-.detail-card p {
-  margin: 0;
+.fact-card p {
   color: var(--muted);
-  font-size: 0.8rem;
+  font-size: 11px;
   line-height: 1.7;
+  margin: 0;
 }
 
 .skills-grid {
@@ -964,82 +898,72 @@ a:focus-visible {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-width: 0;
-  padding: 19px 15px;
+  min-height: 75px;
+  padding: 17px;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 9px;
-  background: rgba(14, 18, 32, 0.65);
-  font-size: 0.84rem;
-  transition:
-    border-color 0.2s ease,
-    transform 0.2s ease;
+  transition: border-color 0.2s, transform 0.2s;
 }
 
 .skill-card:hover {
+  border-color: #526ba5;
   transform: translateY(-3px);
-  border-color: #515e8a;
 }
 
-.skill-number {
-  color: #727e9c;
+.skill-index {
   font-family: 'DM Mono', monospace;
-  font-size: 0.68rem;
+  font-size: 10px;
+  color: #71819a;
+}
+
+.skill-name {
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .skill-arrow {
   margin-left: auto;
-  color: var(--blue);
+  color: #687995;
+  font-size: 12px;
 }
 
-.skills-note,
-.projects-note {
-  margin-top: 20px;
-  color: #7f89a2;
-  font-size: 0.78rem;
-  line-height: 1.8;
-}
-
-.projects-heading {
-  max-width: none;
+.project-heading {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 20px;
 }
 
-.project-count {
-  padding: 8px 10px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--muted);
-  font-family: 'DM Mono', monospace;
-  font-size: 0.65rem;
+.text-link {
+  color: #c0cce1;
   white-space: nowrap;
+  padding-bottom: 5px;
 }
 
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  gap: 17px;
 }
 
 .project-card {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
-  padding: 21px;
+  padding: 22px;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  background: rgba(14, 18, 32, 0.72);
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease;
+  transition: transform 0.2s, border-color 0.2s;
 }
 
 .project-card:hover {
   transform: translateY(-4px);
-  border-color: #47537b;
+  border-color: #526ba5;
 }
 
-.project-top {
+.project-card-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1047,218 +971,223 @@ a:focus-visible {
 }
 
 .project-number {
-  color: var(--blue);
+  color: var(--accent);
   font-family: 'DM Mono', monospace;
-  font-size: 0.75rem;
+  font-size: 12px;
 }
 
 .project-status {
-  color: #aeb8d3;
-  font-size: 0.63rem;
-  text-align: right;
+  border: 1px solid #35435b;
+  border-radius: 100px;
+  padding: 5px 8px;
+  color: #b4c1d5;
+  font-size: 9px;
 }
 
-.project-art {
+.project-illustration {
+  height: 135px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
-  gap: 13px;
-  min-height: 145px;
-  margin: 22px 0;
-  border: 1px solid #232c46;
+  gap: 12px;
+  padding: 22px;
+  margin-block: 20px;
   border-radius: 8px;
   background:
-    radial-gradient(ellipse at center, rgba(91, 102, 204, 0.18), transparent 70%),
-    #0b0f1c;
+    radial-gradient(ellipse at 80% 20%, rgba(124, 156, 255, 0.16), transparent 55%),
+    #111c30;
+  border: 1px solid #202f48;
+}
+
+.illustration-symbol {
+  color: #a6baff;
   font-family: 'DM Mono', monospace;
-  font-size: 3rem;
+  font-size: 30px;
+  font-weight: 500;
 }
 
-.art-bracket {
-  color: #8399ff;
+.illustration-line {
+  display: block;
+  width: 75%;
+  height: 5px;
+  border-radius: 10px;
+  background: #2c3b55;
 }
 
-.art-code {
-  color: #b59aff;
+.short-line {
+  width: 47%;
+  background: #26344c;
 }
 
 .project-card h3 {
-  margin: 0 0 12px;
-  font-size: 1.02rem;
+  font-size: 16px;
   line-height: 1.5;
+  margin: 0 0 11px;
 }
 
-.project-card > p {
-  min-height: 100px;
-  margin: 0;
+.project-description {
   color: var(--muted);
-  font-size: 0.81rem;
-  line-height: 1.85;
+  font-size: 11px;
+  line-height: 1.9;
+  margin: 0 0 19px;
 }
 
 .technology-list {
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
-  margin-top: 18px;
+  margin-bottom: 22px;
 }
 
-.technology-list span {
+.technology-tag {
   padding: 6px 8px;
-  border: 1px solid #29314b;
+  color: #bdc9dc;
+  background: #152137;
   border-radius: 5px;
-  color: #aeb9dc;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.62rem;
+  font-size: 9px;
 }
 
-.contact-section {
-  margin-top: 80px;
-  margin-bottom: 70px;
-  padding: 65px 30px;
-  border: 1px solid #2a3350;
-  border-radius: 15px;
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(98, 106, 255, 0.14), transparent 65%),
-    #0e1220;
-  text-align: center;
-}
-
-.contact-section .eyebrow {
-  margin-bottom: 20px;
-}
-
-.contact-description {
-  max-width: 570px;
-  margin: 20px auto 28px;
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.9;
-}
-
-.contact-button {
-  margin-bottom: 19px;
-}
-
-.contact-email {
-  display: block;
-  width: fit-content;
-  margin: 0 auto;
-  color: #a8b7ff;
-  font-size: 0.83rem;
-}
-
-.contact-socials {
+.project-link {
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin-top: 25px;
-}
-
-.contact-socials a {
-  color: var(--muted);
-  font-size: 0.8rem;
-}
-
-.contact-socials a:hover {
-  color: var(--text);
-}
-
-.api-status {
-  padding: 0 24px 25px;
-  text-align: center;
-}
-
-.api-message {
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 9px;
-  color: #8b96b0;
-  font-size: 0.75rem;
-  line-height: 1.7;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+  color: #c6d3ff;
+  font-size: 11px;
+  font-weight: 600;
 }
 
-.api-success {
-  color: #86dcb5;
+.project-link:hover {
+  color: var(--green);
 }
 
-.api-error {
-  max-width: 600px;
-  color: #f0b8a8;
+.projects-note {
+  color: #8290a8;
+  font-size: 11px;
+  line-height: 1.8;
+  margin-top: 20px;
+}
+
+.contact-panel {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 55px;
+  padding: 48px;
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(124, 156, 255, 0.1), transparent 55%),
+    var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+}
+
+.contact-content h2 {
+  max-width: 480px;
+}
+
+.contact-content > p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.9;
+  margin: 19px 0 25px;
+}
+
+.contact-links {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.social-link:hover {
+  background: #142037;
+  border-color: #526ba5;
+}
+
+.social-symbol {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: #202f4b;
+  color: #b7c8ff;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+}
+
+.social-link strong,
+.social-link small {
+  display: block;
+}
+
+.social-link strong {
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+
+.social-link small {
+  color: var(--muted);
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+
+.social-arrow {
+  margin-left: auto;
+  color: #8b9cb7;
 }
 
 .footer {
-  width: min(1120px, calc(100% - 48px));
-  min-height: 105px;
-  margin-inline: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  border-top: 1px solid rgba(146, 155, 179, 0.12);
+  padding-block: 28px;
+  border-top: 1px solid rgba(155, 168, 189, 0.12);
 }
 
-.footer > p {
-  color: #77819a;
-  font-size: 0.75rem;
-  text-align: center;
+.footer-logo {
+  font-size: 24px;
 }
 
-.footer-links {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 20px;
+.footer p,
+.back-to-top {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.7;
 }
 
-.footer-links a {
-  color: #a8b7ff;
-  font-size: 0.75rem;
-  transition: color 0.2s ease;
-}
-
-.footer-links a:hover {
-  color: #ffffff;
-}
-
-.footer-links .back-to-top {
-  color: #8991a9;
-  white-space: nowrap;
+.back-to-top:hover {
+  color: var(--accent);
 }
 
 @media (max-width: 900px) {
   .hero {
     grid-template-columns: 1fr;
-    gap: 35px;
-    padding-top: 65px;
+    gap: 65px;
+    padding-block: 80px;
   }
 
   .hero-content {
     max-width: 650px;
   }
 
-  .hero-visual {
-    width: min(100%, 550px);
+  .hero-card {
+    width: min(550px, 100%);
     margin-inline: auto;
-  }
-
-  .code-content {
-    font-size: 0.76rem;
-  }
-
-  .badge-vue {
-    right: 0;
-  }
-
-  .badge-laravel {
-    left: 0;
-  }
-
-  .about-grid {
-    gap: 35px;
   }
 
   .skills-grid {
@@ -1269,9 +1198,10 @@ a:focus-visible {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .footer {
-    padding: 25px 0;
-    flex-wrap: wrap;
+  .contact-panel {
+    grid-template-columns: 1fr;
+    gap: 35px;
+    padding: 35px;
   }
 }
 
@@ -1279,131 +1209,73 @@ a:focus-visible {
   .section-container,
   .navbar,
   .footer {
-    width: calc(100% - 36px);
+    width: min(100% - 34px, 1120px);
   }
 
   .navbar {
-    min-height: 72px;
-    position: relative;
+    min-height: 70px;
   }
 
-  .menu-toggle {
-    display: block;
+  .nav-links {
+    gap: 14px;
   }
 
-  .navbar nav {
-    position: absolute;
-    z-index: 10;
-    top: calc(100% + 1px);
-    left: 0;
-    right: 0;
+  .nav-links a {
+    font-size: 10px;
+  }
+
+  .nav-button {
     display: none;
-    align-items: stretch;
-    gap: 0;
-    padding: 10px;
-    border: 1px solid var(--border);
-    border-radius: 0 0 10px 10px;
-    background: #0e1220;
-  }
-
-  .navbar nav.nav-open {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .navbar nav a {
-    padding: 14px 12px;
-  }
-
-  .navbar nav .nav-contact {
-    margin-top: 5px;
-    text-align: center;
   }
 
   .hero {
     min-height: auto;
-    padding-top: 55px;
-    padding-bottom: 95px;
-    gap: 30px;
+    padding-block: 70px 75px;
+    gap: 48px;
   }
 
   .availability {
-    margin-bottom: 25px;
-    font-size: 0.59rem;
+    margin-bottom: 27px;
+    font-size: 10px;
   }
 
   .hero h1 {
-    font-size: clamp(2.8rem, 12vw, 4rem);
-    letter-spacing: -2.5px;
-  }
-
-  .hero h2 {
-    font-size: 1.05rem;
+    font-size: clamp(39px, 11vw, 55px);
+    letter-spacing: -2px;
   }
 
   .hero-description {
-    font-size: 0.88rem;
+    font-size: 13px;
   }
 
-  .hero-actions {
-    align-items: stretch;
-  }
-
-  .button {
-    padding: 13px 14px;
-    font-size: 0.78rem;
-  }
-
-  .hero-visual {
-    padding: 20px 0;
+  .hero-card {
+    padding: 13px;
   }
 
   .code-content {
-    padding: 17px 9px;
-    font-size: 0.59rem;
-  }
-
-  .line-number {
-    width: 23px;
-  }
-
-  .code-card-header,
-  .code-card-footer {
-    padding-inline: 12px;
+    padding: 22px 14px;
+    font-size: 10px;
   }
 
   .floating-badge {
-    padding: 9px 11px;
-    font-size: 0.68rem;
+    padding: 10px;
   }
 
-  .badge-vue {
-    top: 0;
-    right: -4px;
+  .badge-top {
+    right: -5px;
   }
 
-  .badge-laravel {
-    bottom: 0;
-    left: -4px;
+  .badge-bottom {
+    left: -5px;
   }
 
-  .content-section {
-    padding-top: 70px;
-    padding-bottom: 35px;
-  }
-
-  .section-heading h2,
-  .contact-section h2 {
-    font-size: 2rem;
+  .section-block {
+    padding-block: 65px;
   }
 
   .about-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .about-copy p {
-    font-size: 0.88rem;
+    gap: 25px;
   }
 
   .skills-grid {
@@ -1412,15 +1284,19 @@ a:focus-visible {
 
   .skill-card {
     gap: 8px;
-    padding: 15px 10px;
-    font-size: 0.74rem;
+    padding: 13px 10px;
+    min-height: 65px;
   }
 
-  .skill-number {
-    font-size: 0.59rem;
+  .skill-name {
+    font-size: 10px;
   }
 
-  .projects-heading {
+  .skill-index {
+    font-size: 9px;
+  }
+
+  .project-heading {
     align-items: flex-start;
     flex-direction: column;
   }
@@ -1429,37 +1305,23 @@ a:focus-visible {
     grid-template-columns: 1fr;
   }
 
-  .project-art {
-    min-height: 120px;
+  .project-illustration {
+    height: 120px;
   }
 
-  .project-card > p {
-    min-height: auto;
-  }
-
-  .contact-section {
-    margin-top: 60px;
-    margin-bottom: 50px;
-    padding: 45px 18px;
-  }
-
-  .contact-description {
-    font-size: 0.83rem;
+  .contact-panel {
+    padding: 24px 18px;
   }
 
   .footer {
-    justify-content: center;
-    flex-direction: column;
-    gap: 13px;
-    padding: 25px 0;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 
-  .footer > p {
+  .footer p {
+    order: 3;
+    width: 100%;
     margin: 0;
-  }
-
-  .footer-links {
-    gap: 16px;
   }
 }
 
@@ -1468,9 +1330,9 @@ a:focus-visible {
   *::before,
   *::after {
     scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 </style>
